@@ -1,0 +1,26 @@
+---
+description: Exposition réseau Docker — gateway seul en ports, reste en expose / interne
+alwaysApply: true
+---
+
+# Exposition des services (Docker Compose / déploiement)
+
+## Principe
+
+- **Un seul point d’entrée public** : la **gateway** (reverse proxy / API gateway). C’est le **seul** service qui doit utiliser `ports: ["Hôte:Conteneur"]` vers l’extérieur (ex. `8080:8080` dans la plage **8000–8099**, cf. règle *infrastructure-port-ranges*).
+- **Tous les autres services métier** (auth, users, commandes, etc.) : **pas** de publication hôte inutile. Utiliser **`expose`** (ports visibles **uniquement** sur le réseau Docker interne) pour que les autres conteneurs s’y connectent.
+- **Bases de données et caches** : **jamais** mappés en `ports` en **production**. En interne, `expose` (ou communication par nom de service sur le réseau) suffit. Plusieurs Postgres sur `5432` **dans des conteneurs différents** : pas de conflit sur l’hôte tant qu’il n’y a pas de `ports` en double côté hôte.
+- **Observabilité** (Grafana, Jaeger, Prometheus, etc., plage **8500–8599**) : `ports` uniquement si un **accès navigateur / outil** est voulu (souvent **dev** ou **réseau admin**). En prod stricte, restreindre au VPN, IP allowlist ou pas d’exposition publique.
+
+## Rappel Compose
+
+| Besoin | Directive typique |
+|--------|---------------------|
+| Exposer le service sur la machine hôte | `ports` |
+| Port connu des **autres conteneurs** seulement | `expose` + même `networks` |
+| Isoler le trafic inter-services | Réseau bridge / overlay partagé (ex. `backend`) |
+
+## Anti-patterns
+
+- Mettre `ports` sur chaque microservice « pour tester vite » : préférer `expose` + appels via la **gateway** ou des tests depuis un conteneur du même réseau.
+- Publier Postgres/Redis sur `0.0.0.0` en prod sans bastion / firewall dédié.

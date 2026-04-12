@@ -26,6 +26,10 @@ go.work.sum
 
 # env file
 .env
+.env.prod
+
+# Air (hot reload)
+tmp/
 
 # Editor/IDE
 # .idea/

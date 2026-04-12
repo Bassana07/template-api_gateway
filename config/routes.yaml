@@ -1,0 +1,17 @@
+# Routage : préfixe de chemin → URL de base du service amont (sans slash final).
+# Le préfixe est retiré ou conservé selon la logique du proxy (étape suivante).
+# Ports alignés sur .cursor/rules/service-default-ports.mdc
+
+routes:
+  - prefix: "/api/auth"
+    upstream: "http://auth-service:8100"
+    # timeout: "15s"
+
+  - prefix: "/api/users"
+    upstream: "http://user-service:8200"
+
+  - prefix: "/api/orders"
+    upstream: "http://order-service:8201"
+
+  - prefix: "/api/products"
+    upstream: "http://product-service:8202"

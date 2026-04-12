@@ -1,0 +1,36 @@
+# Gateway (infrastructure) : plage réservée 8000–8099 — voir .cursor/rules/infrastructure-port-ranges.mdc
+services:
+  # =====================================================================================
+  # ENV DEV (rebuild auto avec Air — monte le code local)
+  # =====================================================================================
+
+  api_gateway-dev:
+    image: api_gateway-dev
+    container_name: api_gateway-dev
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+    environment:
+      PORT: ${PORT:-8080}
+    profiles: ["dev"]
+
+  # =====================================================================================
+  # ENV PROD (binaire statique, image minimale)
+  # =====================================================================================
+
+  api_gateway-prod:
+    image: api_gateway-prod
+    container_name: api_gateway-prod
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: ${PORT:-8080}
+    restart: unless-stopped
+    profiles: ["prod"]

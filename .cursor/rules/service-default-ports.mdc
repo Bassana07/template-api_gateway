@@ -1,0 +1,44 @@
+---
+description: Ports par défaut par service (applicatif, observabilité, données, debug)
+alwaysApply: true
+---
+
+# Ports par défaut (convention projet)
+
+Ces valeurs complètent la règle **plages de ports** (`infrastructure-port-ranges.mdc`) : chaque service a un **numéro stable** pour la config locale, Compose et la documentation.
+
+## Services applicatifs
+
+| Service         | Port |
+|-----------------|------|
+| API Gateway     | 8080 |
+| Auth Service    | 8100 |
+| User Service    | 8200 |
+| Order Service   | 8201 |
+| Product Service | 8202 |
+
+## Observability
+
+| Service    | Port |
+|------------|------|
+| Prometheus | 8500 |
+| Grafana    | 8501 |
+| Jaeger UI  | 8502 |
+
+## Bases de données
+
+| Service             | Port côté hôte (mapping dev / accès local) | Port dans le conteneur |
+|---------------------|---------------------------------------------|-------------------------|
+| PostgreSQL (auth)   | 5432                                        | 5432                    |
+| PostgreSQL (users)  | 5433                                        | 5432                    |
+| PostgreSQL (orders) | 5434                                        | 5432                    |
+| Redis               | 6379                                        | 6379                    |
+| MongoDB             | 27017                                       | 27017                   |
+
+Plusieurs Postgres sur la même machine : **décaler uniquement le port hôte** (`5432`, `5433`, `5434`) ; à l’intérieur du réseau Docker, chaque service reste joignable par **nom** sur **5432**. En **prod**, ne pas publier ces ports sur l’hôte (cf. `service-exposure-docker.mdc`).
+
+## Debug
+
+| Service | Port |
+|---------|------|
+| pprof   | 9000 |

@@ -1,0 +1,22 @@
+# syntax=docker/dockerfile:1
+
+FROM golang:1.22-alpine
+
+RUN apk add --no-cache git ca-certificates
+
+ENV CGO_ENABLED=0
+
+RUN go install github.com/air-verse/air@v1.61.7
+
+WORKDIR /app
+
+COPY go.mod ./
+RUN go mod download
+
+COPY .air.toml ./
+
+EXPOSE 8080
+
+ENV PORT=8080
+
+CMD ["air", "-c", ".air.toml"]

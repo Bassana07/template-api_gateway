@@ -1,0 +1,11 @@
+# Configuration générale de la gateway (écoute, chemins des fichiers).
+# Surcharge possible : variable d'environnement GATEWAY_CONFIG (chemin absolu ou relatif au répertoire de travail).
+
+port: "8080"
+
+# Fichier listant les préfixes → services amont (défaut si ROUTES_FILE n'est pas défini).
+routes_file: "config/routes.yaml"
+
+# Timeouts HTTP (optionnel). Durées au format Go : "30s", "1m", "250ms".
+timeouts:
+  default: "30s"

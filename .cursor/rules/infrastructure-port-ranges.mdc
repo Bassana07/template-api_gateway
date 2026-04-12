@@ -1,0 +1,20 @@
+---
+description: Plages de ports réservées (infrastructure, services, observabilité)
+alwaysApply: true
+---
+
+# Plages de ports (convention projet)
+
+Lors de l’assignation de ports (`docker-compose`, manifests, configs, variables d’environnement), respecter ces plages :
+
+| Plage | Usage |
+|-------|--------|
+| **8000–8099** | Infrastructure (gateway, load balancer) |
+| **8100–8199** | Auth et sécurité |
+| **8200–8299** | Services métier core |
+| **8300–8399** | Services métier secondaires |
+| **8400–8499** | Workers / jobs asynchrones |
+| **8500–8599** | Observability (Prometheus, Jaeger, Grafana, etc.) |
+| **9000–9099** | Ports internes / debug / pprof |
+
+Ne pas placer un service dans une plage qui ne correspond pas à son rôle. En cas de conflit dans une plage, incrémenter dans la même plage avant d’en emprunter une autre.

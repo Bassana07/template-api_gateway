@@ -1,0 +1,7 @@
+{
+  "name": "api gateway",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "api_gateway-dev",
+  "workspaceFolder": "/app",
+  "shutdownAction": "stopCompose"
+}
